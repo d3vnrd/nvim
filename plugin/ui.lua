@@ -17,4 +17,13 @@ Lib.packadd {
     end,
 }
 
-Lib.packadd { src = 'https://github.com/vague-theme/vague.nvim', }
+Lib.packadd {
+    src = 'https://github.com/catppuccin/nvim',
+    name = 'catppuccin',
+    callback = function(cat)
+        cat.setup {
+            flavour = 'mocha',
+            float = { solid = true },
+        }
+    end,
+}

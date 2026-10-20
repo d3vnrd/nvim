@@ -1,7 +1,7 @@
 Lib.packadd {
     src = 'https://github.com/stevearc/conform.nvim',
     name = 'conform',
-    event = 'BufWritePre',
+    event = 'BufReadPre',
     callback = function(plugin)
         plugin.setup {
             notify_on_error = false,
@@ -28,17 +28,19 @@ Lib.packadd {
 
             -- TODO: adjust this list to reflect how i would use
             formatters_by_ft = {
-                lua = { 'stylua' },
-                nix = { 'alejandra' },
-                python = { 'ruff' },
-                markdown = { 'dprint' },
-                html = { 'dprint' },
                 css = { 'dprint' },
+                go = { name = 'gopls', timeout_ms = 500, lsp_format = 'prefer' },
+                html = { 'dprint' },
                 javascript = { 'dprint' },
-                typescript = { 'dprint' },
-                yaml = { 'dprint' },
-                typst = { 'typstyle' },
+                lua = { 'stylua' },
+                markdown = { 'dprint' },
+                nix = { 'nixfmt' },
+                python = { 'ruff' },
                 sh = { 'shfmt' },
+                typescript = { 'dprint' },
+                typst = { 'typstyle' },
+                yaml = { 'dprint' },
+
                 -- For filetypes without a formatter:
                 ['_'] = { 'trim_whitespace', 'trim_newlines' },
             },
@@ -46,6 +48,12 @@ Lib.packadd {
 
         -- Start auto-formatting by default (disable with user ToggleFormat command)
         vim.g.autoformat = true
+
+        vim.api.nvim_create_user_command('ToggleAutoFormat', function()
+            local enabled = vim.g.autoformat
+            vim.g.autoformat = not enabled
+            vim.notify(string.format('%s auto-format', enabled and 'Disable' or 'Enable'), vim.log.levels.INFO)
+        end, {})
 
         Lib.bind('<leader>fm', function()
             plugin.format { async = true }

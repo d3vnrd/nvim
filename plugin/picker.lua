@@ -3,11 +3,21 @@ Lib.packadd {
     callback = function(pick)
         pick.setup {
             window = {
+                prompt_caret = '█',
                 config = function()
                     return {
                         height = 10,
                         width = vim.api.nvim_win_get_width(0),
-                        border = { '', '─', '', '', '', '', '', '' },
+                        border = {
+                            ' ', -- top-left-corner
+                            ' ', -- top
+                            ' ', -- top-right-corner
+                            ' ', -- right
+                            '', -- bottom-right-corner
+                            '', -- bottom
+                            '', -- bottom-left-corner
+                            ' ',
+                        },
                     }
                 end,
             },

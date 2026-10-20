@@ -61,6 +61,9 @@ o.pumblend = 10
 o.list = true
 opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
 
+-- Sets how neovim display end-of-buffer chars ~
+opt.fillchars:append { eob = ' ' }
+
 -- Sync clipboard between OS and Neovim.
 --  Schedule the setting after `UiEnter` because it can increase startup-time.
 --  See `:help 'clipboard'`
