@@ -35,24 +35,6 @@ auto('FileType', {
     end,
 })
 
-auto('VimEnter', {
-    group = augroup 'set-colorscheme',
-    desc = 'Apply choosen color-scheme once startup has finished',
-    once = true,
-    nested = true, -- Set colorscheme trigger 'ColorScheme' event which require nested option to work
-    callback = function()
-        local name = vim.g.colorscheme
-        if not name then
-            return
-        end
-
-        local ok, err = pcall(vim.cmd.colorscheme, name)
-        if not ok then
-            vim.notify(err, vim.log.levels.WARN)
-        end
-    end,
-})
-
 auto('BufHidden', {
     group = augroup 'delete-noname',
     desc = 'Delete [No Name] buffers',
@@ -79,7 +61,6 @@ auto('BufReadPost', {
     callback = function(args)
         local buf = args.buf
 
-        -- TODO: figuring out vim.b, vim.g, etc use to assign and access vars
         if vim.b[buf].restored_last_loc or vim.bo[buf].filetype == 'gitcommit' then
             return
         end
@@ -113,4 +94,24 @@ user('PackClean', function()
     if vim.fn.confirm(msg, '&Yes\n&No', 2) == 1 then
         vim.pack.del(names)
     end
+end, {})
+
+-- TODO: custom command to update plugins list, allow user to choose single or all
+user('PackUpdate', function()
+    vim.ui.select({ 'tabs', 'spaces' }, {
+        prompt = 'Select tabs or spaces:',
+        format_item = function(item)
+            return ('I choose %s!'):format(item)
+        end,
+        preview_item = function(item)
+            local lines = { 'This is ' .. vim.inspect(item) }
+            local buf = vim.api.nvim_create_buf(false, true)
+            vim.api.nvim_buf_set_lines(buf, 0, -1, false, lines)
+            vim.bo[buf].bufhidden = 'wipe'
+            return { buf = buf }
+        end,
+    }, function(choice)
+        vim.o.expandtab = choice == 'spaces'
+        vim.print(('Selected "%s" => expandtab=%s'):format(choice, vim.o.expandtab))
+    end)
 end, {})

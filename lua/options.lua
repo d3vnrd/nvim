@@ -14,6 +14,9 @@ local opt = vim.opt
 g.mapleader = ' '
 g.maplocalleader = ' '
 
+-- Enables 24-bit RGB color in the TUI
+g.termguicolors = true
+
 -- Make line relative number default
 o.number = true
 o.relativenumber = true
@@ -25,12 +28,15 @@ o.mouse = 'n'
 o.cursorline = true
 o.guicursor = ''
 
+-- Main ui components
+o.cmdheight = 1 -- 0 is in experiment require `ui2` enabled
 o.colorcolumn = '80'
+o.conceallevel = 0
 o.laststatus = 3
-o.showmode = false -- don't show mode already in status line
-o.signcolumn = 'yes' -- keep signcolumn on by default
+o.signcolumn = 'yes' -- reserve space for special indicators (e.g. diagnostics)
+o.showmode = false
 o.showtabline = 0
-o.winborder = 'none' -- set default float border to none
+o.winborder = 'solid'
 o.wrap = false
 
 -- Configure how new splits should be opened
@@ -61,8 +67,8 @@ o.pumblend = 10
 o.list = true
 opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
 
--- Sets how neovim display end-of-buffer chars ~
-opt.fillchars:append { eob = ' ' }
+-- Sets how neovim display end-of-buffer and verticle split chars ~
+opt.fillchars:append { eob = ' ', vert = '│' }
 
 -- Sync clipboard between OS and Neovim.
 --  Schedule the setting after `UiEnter` because it can increase startup-time.

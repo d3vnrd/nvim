@@ -2,8 +2,8 @@ Lib.packadd {
     src = 'https://github.com/stevearc/conform.nvim',
     name = 'conform',
     event = 'BufReadPre',
-    callback = function(plugin)
-        plugin.setup {
+    callback = function(conform)
+        conform.setup {
             notify_on_error = false,
             notify_no_formatters = false,
 
@@ -26,7 +26,6 @@ Lib.packadd {
                 return { timeout_ms = 500 }
             end,
 
-            -- TODO: adjust this list to reflect how i would use
             formatters_by_ft = {
                 css = { 'dprint' },
                 go = { name = 'gopls', timeout_ms = 500, lsp_format = 'prefer' },
@@ -56,7 +55,7 @@ Lib.packadd {
         end, {})
 
         Lib.bind('<leader>fm', function()
-            plugin.format { async = true }
+            conform.format { async = true }
         end, 'Format current buffer')
     end,
 }

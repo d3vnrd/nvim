@@ -1,3 +1,4 @@
+-- NOTE: MiniPick override vim.ui.select by default
 Lib.packadd {
     src = 'https://github.com/nvim-mini/mini.pick',
     callback = function(pick)
@@ -5,9 +6,10 @@ Lib.packadd {
             window = {
                 prompt_caret = '█',
                 config = function()
+                    local height = math.floor(0.4 * vim.o.lines)
                     return {
-                        height = 10,
-                        width = vim.api.nvim_win_get_width(0),
+                        height = math.min(height, 15),
+                        width = vim.o.columns,
                         border = {
                             ' ', -- top-left-corner
                             ' ', -- top
@@ -16,11 +18,12 @@ Lib.packadd {
                             '', -- bottom-right-corner
                             '', -- bottom
                             '', -- bottom-left-corner
-                            ' ',
+                            ' ', -- left
                         },
                     }
                 end,
             },
+            options = { content_from_bottom = false },
         }
 
         Lib.bind('<leader>fb', pick.builtin.buffers, 'Find opened buffers')
@@ -44,6 +47,18 @@ Lib.packadd {
 
         Lib.bind('<leader>fc', extra.pickers.commands, 'Find available commands')
         Lib.bind('<leader>fe', extra.pickers.explorer, 'Explore current directory and open file')
-        Lib.bind('<leader>fk', extra.pickers.keymaps, 'Find available keymaps')
+        Lib.bind('<leader>fk', function()
+            extra.pickers.keymaps({ mode = 'all', scope = 'all' }, {
+                source = {
+                    -- TODO: custom keymaps show
+                    show = function(buf_id, items, _)
+                        local lines = vim.tbl_map(function(item)
+                            return item.text -- reformat here, for example with string.format('%-20s %s', ...)
+                        end, items)
+                        vim.api.nvim_buf_set_lines(buf_id, 0, -1, false, lines)
+                    end,
+                },
+            })
+        end, 'Find available keymaps')
     end,
 }
