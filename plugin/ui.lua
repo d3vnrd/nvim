@@ -1,5 +1,4 @@
 Lib.packadd {
-    -- Beautify bottom status-line
     src = 'https://github.com/nvim-mini/mini.statusline',
     event = 'UIEnter',
     callback = function(st)

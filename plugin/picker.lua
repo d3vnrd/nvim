@@ -5,25 +5,12 @@ Lib.packadd {
         pick.setup {
             window = {
                 prompt_caret = '█',
-                config = function()
-                    local height = math.floor(0.4 * vim.o.lines)
-                    return {
-                        height = math.min(height, 15),
-                        width = vim.o.columns,
-                        border = {
-                            ' ', -- top-left-corner
-                            ' ', -- top
-                            ' ', -- top-right-corner
-                            ' ', -- right
-                            '', -- bottom-right-corner
-                            '', -- bottom
-                            '', -- bottom-left-corner
-                            ' ', -- left
-                        },
-                    }
-                end,
+                config = {
+                    height = 10,
+                    width = vim.o.columns - 2,
+                    border = 'solid',
+                },
             },
-            options = { content_from_bottom = false },
         }
 
         Lib.bind('<leader>fb', pick.builtin.buffers, 'Find opened buffers')

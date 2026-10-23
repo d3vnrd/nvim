@@ -17,12 +17,17 @@
 ---@field pattern? string|string[]
 ---@field callback? fun(mod: table|boolean)
 ---@field confirm? boolean
+---@field enable? boolean
 
 ---@param p PackSpec
 return function(p)
     vim.pack.add({ { src = p.src, name = p.name, version = p.version } }, {
         confirm = p.confirm or false, -- skip confirmation by default
         load = function(data)
+            if p.enable == false then
+                return
+            end
+
             local setup = function()
                 vim.cmd.packadd(data.spec.name)
 

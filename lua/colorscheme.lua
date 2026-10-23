@@ -4,10 +4,26 @@ Lib.packadd {
     callback = function(p)
         p.setup {
             flavour = 'mocha',
-            transparent_background = true,
-            term_colors = vim.g.termguicolors,
             no_italic = true,
             no_bold = true,
+            transparent_background = true,
+            term_colors = vim.g.termguicolors,
+
+            custom_highlights = function(colors)
+                return {
+                    -- mini.pick
+                    MiniPickBorderText = { fg = colors.mantle, bg = colors.mantle },
+                    MiniPickBorderBusy = { fg = colors.mantle, bg = colors.mantle },
+                    MiniPickPromptPrefix = { fg = colors.blue },
+                    MiniPickPrompt = { fg = colors.subtext1 },
+                    MiniPickMatchCurrent = { fg = colors.none, bg = '#2a2b3c' },
+
+                    -- mini.clue
+                    MiniClueTitle = { fg = colors.flamingo, bg = colors.mantle },
+                    MiniClueSeparator = { fg = colors.overlay0 },
+                    MiniClueNextKey = { fg = colors.blue },
+                }
+            end,
         }
     end,
 }
