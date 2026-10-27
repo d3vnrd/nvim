@@ -74,6 +74,30 @@ auto('BufReadPost', {
     end,
 })
 
+auto('BufWritePre', {
+    group = augroup 'md_auto_dates_update',
+    desc = 'Automatically updating markdown dates in frontmatter',
+    pattern = '*.md',
+    callback = function(args)
+        local lines = vim.api.nvim_buf_get_lines(args.buf, 0, -1, false)
+        local in_frontmatter = false
+
+        for i, line in ipairs(lines) do
+            if line:match '^%-%-%-$' then
+                if not in_frontmatter then
+                    in_frontmatter = true
+                else
+                    break
+                end
+            elseif in_frontmatter and line:match '^updated:%s' then
+                local new_line = 'updated: ' .. os.date '%Y-%m-%dT%H:%M:%S%z'
+                vim.api.nvim_buf_set_lines(args.buf, i - 1, i, false, { new_line })
+                return
+            end
+        end
+    end,
+})
+
 -- User Commands
 --  `:help lua-guide-commands`
 local user = vim.api.nvim_create_user_command
